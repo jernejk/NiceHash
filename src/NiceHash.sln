@@ -1,0 +1,38 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31815.197
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NiceHash.Core", "NiceHash.Core\NiceHash.Core.csproj", "{9D21E583-0A54-48F5-9E45-C23D78AA5BF3}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NiceHash.Cmd", "NiceHash.Cmd\NiceHash.Cmd.csproj", "{7E13DB98-0BAA-4AB5-B83E-4B979B463AE1}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Files", "Solution Files", "{D2812E1C-0CA8-48A0-A281-1BE3D4F739DC}"
+	ProjectSection(SolutionItems) = preProject
+		..\.gitignore = ..\.gitignore
+		..\LICENSE = ..\LICENSE
+		..\README.md = ..\README.md
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{9D21E583-0A54-48F5-9E45-C23D78AA5BF3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9D21E583-0A54-48F5-9E45-C23D78AA5BF3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9D21E583-0A54-48F5-9E45-C23D78AA5BF3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9D21E583-0A54-48F5-9E45-C23D78AA5BF3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7E13DB98-0BAA-4AB5-B83E-4B979B463AE1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7E13DB98-0BAA-4AB5-B83E-4B979B463AE1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7E13DB98-0BAA-4AB5-B83E-4B979B463AE1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7E13DB98-0BAA-4AB5-B83E-4B979B463AE1}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {AB97E51A-A3C0-4BAA-A9EC-897F1037FA27}
+	EndGlobalSection
+EndGlobal
