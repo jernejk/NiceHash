@@ -1,0 +1,37 @@
+/*
+    This is a configuration file for the SwitchStartupProject Visual Studio Extension
+    See https://heptapod.host/thirteen/switchstartupproject/blob/branch/current/Configuration.md
+*/
+{
+  /*  Configuration File Version  */
+  "Version": 3,
+  "ListAllProjects": false,
+  "MultiProjectConfigurations": {
+    "NiceHash.Cmd": {
+      "Projects": {
+        "NiceHash.Cmd": {}
+      }
+    },
+    "NiceHash.Cmd stat": {
+      "Projects": {
+        "NiceHash.Cmd": {
+          "CommandLineArguments": "stats"
+        }
+      }
+    },
+    "NiceHash.Cmd start-rig": {
+      "Projects": {
+        "NiceHash.Cmd": {
+          "CommandLineArguments": "start-rig"
+        }
+      }
+    },
+    "NiceHash.Cmd stop-rig": {
+      "Projects": {
+        "NiceHash.Cmd": {
+          "CommandLineArguments": "stop-rig"
+        }
+      }
+    }
+  }
+}

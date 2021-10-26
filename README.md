@@ -23,6 +23,7 @@ I'm also working on Elgato Stream Deck support so that I can control it faster.
 
 Duplicate `appsettings.json` as `appsettings.Local.json` and replace variables with API values from NiceHash portal to avoid accidental commits.
 
+![Console application examples](images/console-example.png)
 
 # Resources
 

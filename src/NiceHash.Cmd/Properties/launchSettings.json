@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "NiceHash.Cmd": {
+      "commandName": "Project",
+      "commandLineArgs": "stats"
+    }
+  }
+}
