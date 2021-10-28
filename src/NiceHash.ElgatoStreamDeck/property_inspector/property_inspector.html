@@ -13,10 +13,25 @@
 			and
 			Elgato SDK Documentation -> https://developer.elgato.com/documentation/stream-deck/sdk/property-inspector/
 	-->
-		
-		<div class="sdpi-item" id="counter_value">
-			<div class="sdpi-item-label">Counter Value</div>
-			<input id="txtCounterValue" class="sdpi-item-value" type="number" inputmode="numeric" pattern="[0-9]*" placeholder="Enter counter number" onchange="setSettings(event.target.value, 'Counter')" />
+
+		<div class="sdpi-item" id="niceHashUrl">
+			<div class="sdpi-item-label">NiceHash API URL</div>
+			<input id="txtNiceHashUrl" class="sdpi-item-value" type="text" placeholder="URL to NiceHash URL (demo URL https://api-test.nicehash.com)" onchange="setSettings(event.target.value, 'NiceHashUrl')" />
+		</div>
+
+		<div class="sdpi-item" id="ordId">
+			<div class="sdpi-item-label">Organization Id</div>
+			<input id="txtOrganizationId" class="sdpi-item-value" type="text" placeholder="Organization ID (find it in My settings | API Keys)" onchange="setSettings(event.target.value, 'OrganizationId')" />
+		</div>
+
+		<div class="sdpi-item" id="apiKey">
+			<div class="sdpi-item-label">API Key</div>
+			<input id="txtApiKey" class="sdpi-item-value" type="text" placeholder="API Key (find it in My settings | API Keys)" onchange="setSettings(event.target.value, 'ApiKey')" />
+		</div>
+
+		<div class="sdpi-item" id="apiSecret">
+			<div class="sdpi-item-label">API Secret</div>
+			<input id="txtApiSecret" class="sdpi-item-value" type="text" placeholder="API Secret (find it in My settings | API Keys)" onchange="setSettings(event.target.value, 'ApiSecret')" />
 		</div>
 
 	</div>

@@ -4,7 +4,6 @@ namespace NiceHash.ElgatoStreamDeck;
 
 class Program
 {
-
     static async Task Main(string[] args)
     {
         using var config = StreamDeckLib.Config.ConfigurationBuilder.BuildDefaultConfiguration(args);

@@ -2,17 +2,45 @@
   "Actions": [
     {
       "Icon": "images/actionIcon",
-      "Name": "NiceHashMinerAction",
+      "Name": "NiceHash Waller Balance",
       "States": [
         {
           "Image": "images/actionDefaultImage",
           "TitleAlignment": "middle",
-          "FontSize": "16"
+          "FontSize": "13"
         }
       ],
-      "SupportedInMultiActions": false,
+      "SupportedInMultiActions": true,
       "Tooltip": "The first action for the NiceHashMiner Stream Deck plugin",
-      "UUID": "NiceHash.MinerControl"
+      "UUID": "NiceHash.WalletBalance"
+    },
+    {
+      "Icon": "images/actionIcon",
+      "Name": "NiceHash Start Rig",
+      "States": [
+        {
+          "Image": "images/actionDefaultImage",
+          "TitleAlignment": "middle",
+          "FontSize": "13"
+        }
+      ],
+      "SupportedInMultiActions": true,
+      "Tooltip": "The first action for the NiceHashMiner Stream Deck plugin",
+      "UUID": "NiceHash.StartRig"
+    },
+    {
+      "Icon": "images/actionIcon",
+      "Name": "NiceHash Stop Rig",
+      "States": [
+        {
+          "Image": "images/actionDefaultImage",
+          "TitleAlignment": "middle",
+          "FontSize": "13"
+        }
+      ],
+      "SupportedInMultiActions": true,
+      "Tooltip": "The first action for the NiceHashMiner Stream Deck plugin",
+      "UUID": "NiceHash.StopRig"
     }
   ],
 	"Category": "Your Plugin Category",

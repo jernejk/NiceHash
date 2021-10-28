@@ -18,6 +18,7 @@ $buildConfiguration = "Debug"
 
 # Get the target .net core framework
 $targetFrameworkName = $projectXML.Project.PropertyGroup.TargetFramework;
+Write-Host $targetFrameworkName
 
 # Set local path references
 $streamDeckExePath = "$($ENV:ProgramFiles)\Elgato\StreamDeck\StreamDeck.exe"
