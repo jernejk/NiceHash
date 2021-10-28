@@ -7,7 +7,7 @@ using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Text;
 
-namespace NiceHash.Core;
+namespace NiceHash.Core.Services;
 
 public interface INiceHashService
 {
@@ -20,20 +20,22 @@ public interface INiceHashService
 internal class NiceHashService : INiceHashService
 {
     private readonly IHttpClientFactory _httpClientFactory;
-    private readonly ApiConfig _apiConfig;
+    private readonly IConfigProvider _configProvider;
     private readonly IMemoryCache _memoryCache;
 
-    public NiceHashService(IHttpClientFactory httpClientFactory, ApiConfig apiConfig, IMemoryCache memoryCache)
+    public NiceHashService(IHttpClientFactory httpClientFactory, IConfigProvider configProvider, IMemoryCache memoryCache)
     {
         _httpClientFactory = httpClientFactory;
-        _apiConfig = apiConfig;
+        _configProvider = configProvider;
         _memoryCache = memoryCache;
     }
 
     public async Task<TResponse?> GetAnnonymous<TResponse>(string url, CancellationToken ct)
     {
+        NiceHashConfig config = _configProvider.GetConfig();
+
         using HttpClient client = _httpClientFactory.CreateClient();
-        client.BaseAddress = _apiConfig.BaseUri;
+        client.BaseAddress = config.BaseUri;
 
         var a = await client.GetStringAsync(url, ct);
 
@@ -91,10 +93,12 @@ internal class NiceHashService : INiceHashService
 
     private async Task<HttpClient> CreateClientWithAuth(string url, string method, Guid? requestId = null, string? jsonPayload = null, CancellationToken ct = default)
     {
-        HttpClient client = _httpClientFactory.CreateClient();
-        client.BaseAddress = _apiConfig.BaseUri;
+        NiceHashConfig config = _configProvider.GetConfig();
 
-        await AddAuth(client.DefaultRequestHeaders, url, method, jsonPayload, ct);
+        HttpClient client = _httpClientFactory.CreateClient();
+        client.BaseAddress = config.BaseUri;
+
+        await AddAuth(config, client.DefaultRequestHeaders, url, method, jsonPayload, ct);
 
         if (requestId.HasValue)
         {
@@ -104,16 +108,16 @@ internal class NiceHashService : INiceHashService
         return client;
     }
 
-    private async Task AddAuth(HttpRequestHeaders header, string url, string method, string payload = null, CancellationToken ct = default)
+    private async Task AddAuth(NiceHashConfig config, HttpRequestHeaders header, string url, string method, string? payload = null, CancellationToken ct = default)
     {
         string serverTime = await GetServerTime(ct) ?? throw new ServerTimeException();
 
         string nonce = Guid.NewGuid().ToString();
-        string digest = CryptoUtils.HashBySegments(_apiConfig.ApiSecret, _apiConfig.ApiKey, serverTime, nonce, _apiConfig.OrganizationId, method, url, payload);
+        string digest = CryptoUtils.HashBySegments(config.ApiSecret, config.ApiKey, serverTime, nonce, config.OrganizationId, method, url, payload);
 
         header.Add("X-Time", serverTime);
         header.Add("X-Nonce", nonce);
-        header.Add("X-Auth", $"{_apiConfig.ApiKey}:{digest}");
-        header.Add("X-Organization-Id", _apiConfig.OrganizationId);
+        header.Add("X-Auth", $"{config.ApiKey}:{digest}");
+        header.Add("X-Organization-Id", config.OrganizationId);
     }
 }

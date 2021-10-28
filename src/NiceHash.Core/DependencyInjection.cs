@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using NiceHash.Core.Config;
+using NiceHash.Core.Services;
 
 namespace NiceHash.Core
 {
@@ -8,7 +9,7 @@ namespace NiceHash.Core
     {
         public static IServiceCollection AddNiceHash(this IServiceCollection serviceCollection, IConfiguration configuration)
         {
-            ApiConfig apiConfig = new()
+            NiceHashConfig apiConfig = new()
             {
                 // Need to manually parse atm as IConfiguration.GetSection("NiceHashApi").Get<ApiConfig>() seems to be bugged.
                 BaseUri = new Uri(configuration["NiceHashApi:BaseUri"]),
@@ -20,11 +21,12 @@ namespace NiceHash.Core
             return serviceCollection.AddNiceHash(apiConfig);
         }
 
-        public static IServiceCollection AddNiceHash(this IServiceCollection serviceCollection, ApiConfig apiConfig)
+        public static IServiceCollection AddNiceHash(this IServiceCollection serviceCollection, NiceHashConfig apiConfig)
             => serviceCollection
                 .AddTransient<INiceHashService, NiceHashService>()
                 .AddTransient<IRigsManagementService, RigsManagementService>()
                 .AddTransient<IWalletService, WalletService>()
+                .AddTransient<IConfigProvider, DefaultConfigProvider>()
                 .AddSingleton(apiConfig)
                 .AddHttpClient()
                 .AddMemoryCache();

@@ -19,9 +19,20 @@ var serviceCollection = new ServiceCollection()
 CommandApp app = new(new TypeRegistrar(serviceCollection));
 app.Configure(config =>
 {
-    config.AddCommand<StatsCommand>("stats");
-    config.AddCommand<StartRigCommand>("start-rig");
-    config.AddCommand<StopRigCommand>("stop-rig");
+    config.SetApplicationVersion("1.0");
+    config.ValidateExamples();
+
+    config.AddCommand<StatsCommand>("stats")
+        .WithDescription("Get wallet and rigs status.")
+        .WithExample(new[] { "stats" });
+
+    config.AddCommand<StartRigCommand>("start-rig")
+        .WithDescription("Start all rigs.")
+        .WithExample(new[] { "start-rig" });
+
+    config.AddCommand<StopRigCommand>("stop-rig")
+        .WithDescription("Stop all rigs.")
+        .WithExample(new[] { "stop-rig" });
 });
 
 return await app.RunAsync(args);

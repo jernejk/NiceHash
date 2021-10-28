@@ -1,6 +1,6 @@
 ﻿using NiceHash.Core.Models;
 
-namespace NiceHash.Core;
+namespace NiceHash.Core.Services;
 
 public interface IWalletService
 {

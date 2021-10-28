@@ -1,10 +1,10 @@
 ﻿namespace NiceHash.Core.Config;
 
-public class ApiConfig
+public class NiceHashConfig
 {
-    public ApiConfig() { }
+    public NiceHashConfig() { }
 
-    public ApiConfig(Uri baseUri, string organizationId, string apiKey, string apiSecret)
+    public NiceHashConfig(Uri baseUri, string organizationId, string apiKey, string apiSecret)
     {
         BaseUri = baseUri;
         OrganizationId = organizationId;
