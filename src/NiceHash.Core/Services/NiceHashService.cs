@@ -22,6 +22,7 @@ internal class NiceHashService : INiceHashService
     private readonly IHttpClientFactory _httpClientFactory;
     private readonly IConfigProvider _configProvider;
     private readonly IMemoryCache _memoryCache;
+    private string _lastKnownServerTime;
 
     public NiceHashService(IHttpClientFactory httpClientFactory, IConfigProvider configProvider, IMemoryCache memoryCache)
     {
@@ -74,22 +75,36 @@ internal class NiceHashService : INiceHashService
     /// Get and cache server time.
     /// </summary>
     internal async Task<string?> GetServerTime(CancellationToken ct)
-        => await _memoryCache.GetOrCreateAsync("NiceHashServerTime", async entity =>
+    {
+        if (!_memoryCache.TryGetValue("NiceHashServerTime", out string? serverTime))
         {
-
             try
             {
+                // Attempt to get latest server time.
                 var response = await GetAnnonymous<ServerTimeResponse>("/api/v2/time", ct);
 
                 // TODO: Check how often we need to update server time.
-                entity.SetAbsoluteExpiration(TimeSpan.FromMinutes(1));
-                return response?.ServerTime.ToString();
+                serverTime = response?.ServerTime.ToString();
+
+                if (!string.IsNullOrWhiteSpace(serverTime))
+                {
+                    _lastKnownServerTime = serverTime;
+
+                    // Cache only if result is valid.
+                    _memoryCache.Set("NiceHashServerTime", serverTime, TimeSpan.FromMinutes(1));
+                    return response?.ServerTime.ToString();
+                }
             }
             catch
             {
-                return null;
+                // TODO: Log.
             }
-        });
+        }
+
+        // Use latest server time or fallback to last known server time.
+        return serverTime
+            ?? _lastKnownServerTime;
+    }
 
     private async Task<HttpClient> CreateClientWithAuth(string url, string method, Guid? requestId = null, string? jsonPayload = null, CancellationToken ct = default)
     {
