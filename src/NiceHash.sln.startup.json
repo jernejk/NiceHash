@@ -9,7 +9,9 @@
   "MultiProjectConfigurations": {
     "NiceHash.Cmd": {
       "Projects": {
-        "NiceHash.Cmd": {}
+        "NiceHash.Cmd": {
+          "CommandLineArguments": ""
+        }
       }
     },
     "NiceHash.Cmd stat": {
@@ -31,6 +33,11 @@
         "NiceHash.Cmd": {
           "CommandLineArguments": "stop-rig"
         }
+      }
+    },
+    "Elgato Stream Deck": {
+      "Projects": {
+        "NiceHash.ElgatoStreamDeck": {}
       }
     }
   }
