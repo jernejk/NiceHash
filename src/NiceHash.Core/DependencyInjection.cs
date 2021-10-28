@@ -23,11 +23,26 @@ namespace NiceHash.Core
 
         public static IServiceCollection AddNiceHash(this IServiceCollection serviceCollection, NiceHashConfig apiConfig)
             => serviceCollection
+                .AddSingleton(apiConfig)
+                .AddSingleton<IConfigProvider, DefaultConfigProvider>()
+                .AddNiceHashWithoutConfig();
+
+        public static IServiceCollection AddNiceHash(this IServiceCollection serviceCollection, IConfigProvider configProvider)
+            => serviceCollection
+                .AddSingleton(configProvider)
+                .AddNiceHashWithoutConfig();
+
+        public static IServiceCollection AddNiceHash<TConfigProvider>(this IServiceCollection serviceCollection)
+            where TConfigProvider : class, IConfigProvider
+            => serviceCollection
+                .AddTransient<IConfigProvider, TConfigProvider>()
+                .AddNiceHashWithoutConfig();
+
+        public static IServiceCollection AddNiceHashWithoutConfig(this IServiceCollection serviceCollection)
+            => serviceCollection
                 .AddTransient<INiceHashService, NiceHashService>()
                 .AddTransient<IRigsManagementService, RigsManagementService>()
                 .AddTransient<IWalletService, WalletService>()
-                .AddTransient<IConfigProvider, DefaultConfigProvider>()
-                .AddSingleton(apiConfig)
                 .AddHttpClient()
                 .AddMemoryCache();
     }
