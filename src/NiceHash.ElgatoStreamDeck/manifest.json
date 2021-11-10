@@ -2,7 +2,7 @@
   "Actions": [
     {
       "Icon": "images/actionIcon",
-      "Name": "NiceHash Waller Balance",
+      "Name": "NiceHash Wallet + rigs control",
       "States": [
         {
           "Image": "images/actionDefaultImage",
@@ -43,30 +43,30 @@
       "UUID": "NiceHash.StopRig"
     }
   ],
-	"Category": "Your Plugin Category",
-	"CategoryIcon": "images/category/categoryIcon",
-	"Disabled":  false,
-	"Author": "Your Name",
-	"CodePathWin": "NiceHash.ElgatoStreamDeck.exe",
-	"CodePathMac":  "NiceHash.ElgatoStreamDeck",
+  "Category": "NiceHash (unofficial)",
+  "CategoryIcon": "images/category/categoryIcon",
+  "Disabled": false,
+  "Author": "JK (@jernej_kavka)",
+  "CodePathWin": "NiceHash.ElgatoStreamDeck.exe",
+  "CodePathMac": "NiceHash.ElgatoStreamDeck",
   "PropertyInspectorPath": "property_inspector/property_inspector.html",
-  "Description": "Description of NiceHashMiner.",
+  "Description": "Unofficial plugin for NiceHash. It supports viewing current amount in wallet, miner status and start/stop miners.",
   "Name": "NiceHashMiner",
   "Icon": "images/pluginIcon",
-  "URL": "https://www.elgato.com/gaming/stream-deck",
+  "URL": "https://github.com/jernejk/NiceHash",
   "Version": "1.0",
-	"SDKVersion": 2,
-	"Software": {
-		"MinimumVersion":  "4.1"
-	},
-	"OS": [
+  "SDKVersion": 2,
+  "Software": {
+    "MinimumVersion": "4.1"
+  },
+  "OS": [
     {
-        "Platform": "mac",
-        "MinimumVersion" : "10.11"
+      "Platform": "mac",
+      "MinimumVersion": "10.11"
     },
     {
-        "Platform": "windows",
-        "MinimumVersion" : "10"
+      "Platform": "windows",
+      "MinimumVersion": "10"
     }
   ]
 }
