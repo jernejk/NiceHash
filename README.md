@@ -25,6 +25,41 @@ Duplicate `appsettings.json` as `appsettings.Local.json` and replace variables w
 
 ![Console application examples](images/console-example.png)
 
+## Elgato Stream
+
+Install:
+
+1. Have .NET 6 SDK
+2. Open `src\NiceHash.ElgatoStreamDeck` with Windows Terminal or PowerShell
+3. Run `dotnet build`
+4. Run `.\RegisterPluginAndStartStreamDeck.ps1`
+
+Currently supported buttons:
+- Wallet + Rigs control
+   - Show NiceHash wallet balance and rigs status
+   - Tap - Update wallet balance
+   - Long press - Start/Stop rig
+- Start rig - on tap start rig
+- Stop rig - on tap stop rig
+
+![image](https://user-images.githubusercontent.com/5943653/141119433-aeb5e2d2-9f5a-437d-8be5-c789a19ac239.png)
+
+**Figure:** Various buttons in Stream Deck.
+
+![image](https://user-images.githubusercontent.com/5943653/141119836-ff038286-a994-4a28-9c47-7a0027b9599a.png)
+
+**Figure:** Show wallet balance and rig status.
+
+**TIP:** You can use Stream Deck Multi Action to stop rigs and start a game.
+
+![image](https://user-images.githubusercontent.com/5943653/141119258-f17f7b0f-edb3-4538-94bc-d271e4250bba.png)
+
+**Figure:** Different games which are Multi Actions.
+
+![image](https://user-images.githubusercontent.com/5943653/141119341-1bf856f2-18db-4ee3-81d7-10f41b97d6dd.png)
+
+**Figure:** Rigs are stopped before running the game.
+
 # Resources
 
 - [Official NiceHash demo apps](https://github.com/nicehash/rest-clients-demo)
