@@ -42,7 +42,7 @@ public class StreamDeckNiceHashService
             if (wallet?.Currencies?.Any() == true)
             {
                 CurrencyInfo highestCurrency = wallet.Currencies.MaxBy(x => x.Available);
-                string result = $"{Math.Round(highestCurrency.Available, 4)}\n{highestCurrency.Currency}";
+                string result = $"{Math.Round(highestCurrency.Available, 5)}\n{highestCurrency.Currency}";
 
                 MiningRig miner = await GetMinerStatus();
                 if (miner != null)
