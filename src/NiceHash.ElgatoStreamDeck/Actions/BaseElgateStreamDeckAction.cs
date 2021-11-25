@@ -17,7 +17,7 @@ public abstract class BaseElgateStreamDeckAction<T> : BaseStreamDeckActionWithSe
         if (_updateStatusEverySecond != updateInterval)
         {
             _updateStatusEverySecond = updateInterval;
-            if (updateInterval.TotalMilliseconds == 0)
+            if (updateInterval.TotalSeconds < 10)
             {
                 StopBackgroundTask();
             }
@@ -79,7 +79,7 @@ public abstract class BaseElgateStreamDeckAction<T> : BaseStreamDeckActionWithSe
                 await UpdateDisplay(args);
             }
 
-            if (GetUpdateInterval().TotalMilliseconds > 0)
+            if (GetUpdateInterval().TotalSeconds >= 10)
             {
                 ResetBackgroundTaskTimer(args);
             }

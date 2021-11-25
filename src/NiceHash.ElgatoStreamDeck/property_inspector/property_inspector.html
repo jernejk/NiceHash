@@ -34,6 +34,37 @@
 			<input id="txtApiSecret" class="sdpi-item-value" type="text" placeholder="API Secret (find it in My settings | API Keys)" onchange="setSettings(event.target.value, 'ApiSecret')" />
 		</div>
 
+		<div class="sdpi-item" id="select_update_status_every_second">
+			<div class="sdpi-item-label">Status update frequency</div>
+			<select class="sdpi-item-value select" id="update_interval" onchange="setSettings(event.target.value, 'UpdateInterval')">
+				<option value="0" selected="selected">Never</option>
+				<option value="15">Every 15 seconds</option>
+				<option value="30">Every 30 seconds</option>
+				<option value="60">Every 1 minute</option>
+				<option value="180">Every 3 minutes</option>
+				<option value="300">Every 5 minutes</option>
+				<option value="900">Every 15 minutes</option>
+				<option value="1800">Every 30 minutes</option>
+				<option value="3600">Every 1 hour</option>
+			</select>
+		</div>
+
+		<hr />
+
+		<div class="sdpi-item" id="mainCurrency">
+			<div class="sdpi-item-label">Main Currency</div>
+			<input id="txtMainCurrency" class="sdpi-item-value" type="text" placeholder="Main currency used to display balance" onchange="setSettings(event.target.value, 'MainCurrency')" />
+		</div>
+
+		<div class="sdpi-item" id="freeCurrencyApiKey">
+			<div class="sdpi-item-label">Free Currency API</div>
+			<input id="txtFreeCurrencyApiKey" class="sdpi-item-value" type="text" placeholder="Optional" onchange="setSettings(event.target.value, 'FreeCurrencyApiKey')" />
+		</div>
+
+		<div class="sdpi-item">
+			* NOTE: Service is free and works without API key. If it stops working, get the key at https://freecurrencyapi.net/
+		</div>
+
 	</div>
 	<script src="js/property-inspector.js"></script>
 </body>

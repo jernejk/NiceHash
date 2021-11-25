@@ -9,6 +9,8 @@ public class NiceHashWalletBalanceAction : BaseNiceHashAction
 {
     public override async Task OnLongPress(StreamDeckEventPayload args)
     {
+        await Manager.SetImageAsync(args.context, "images/waiting.png");
+
         await NiceHashService.ToggleRigStatus();
         await UpdateWalletBalance(args);
     }
@@ -21,9 +23,14 @@ public class NiceHashWalletBalanceAction : BaseNiceHashAction
 
     private async Task UpdateWalletBalance(StreamDeckEventPayload args)
     {
+        await Manager.SetImageAsync(args.context, "images/waiting.png");
+
         ResetBackgroundTaskTimer(args);
 
         string balance = await NiceHashService.GetCurrentWalletBalance();
         await Manager.SetTitleAsync(args.context, balance);
+
+        string status = NiceHashService.GetStatus();
+        await Manager.SetImageAsync(args.context, $"images/{status}.png");
     }
 }

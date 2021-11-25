@@ -10,7 +10,7 @@ public abstract class BaseNiceHashAction : BaseElgateStreamDeckAction<NiceSettin
 
     public StreamDeckNiceHashService NiceHashService { get { return _niceHashService; } }
 
-    public override TimeSpan GetUpdateInterval() => TimeSpan.FromMinutes(1);
+    public override TimeSpan GetUpdateInterval() => TimeSpan.FromSeconds(SettingsModel.UpdateInterval);
 
     public async override Task OnDidReceiveSettings(StreamDeckEventPayload args)
     {

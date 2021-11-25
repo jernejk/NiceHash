@@ -8,7 +8,10 @@ var websocket = null,
 	  BaseUrl: 'https://api2.nicehash.com',
 	  OrganizationId: '',
 	  ApiKey: '',
-	  ApiSecret: ''
+	  ApiSecret: '',
+	  MainCurrency: 'USD',
+	  FreeCurrencyApiKey: '',
+	  UpdateInterval: 60
   };
 
 function connectElgatoStreamDeckSocket(inPort, inUUID, inRegisterEvent, inInfo, inActionInfo) {
@@ -23,14 +26,22 @@ function connectElgatoStreamDeckSocket(inPort, inUUID, inRegisterEvent, inInfo, 
 		settingsModel.OrganizationId = actionInfo.payload.settings.settingsModel.OrganizationId;
 		settingsModel.ApiKey = actionInfo.payload.settings.settingsModel.ApiKey;
 		settingsModel.ApiSecret = actionInfo.payload.settings.settingsModel.ApiSecret;
+		settingsModel.MainCurrency = actionInfo.payload.settings.settingsModel.MainCurrency;
+		settingsModel.FreeCurrencyApiKey = actionInfo.payload.settings.settingsModel.FreeCurrencyApiKey;
+		settingsModel.UpdateInterval = actionInfo.payload.settings.settingsModel.UpdateInterval;
 	} else {
-		settingsModel.BaseUrl = 'https://api2.nicehash.com'
+		settingsModel.BaseUrl = 'https://api2.nicehash.com';
+		settingsModel.MainCurrency = 'USD';
+		settingsModel.UpdateInterval = 60;
     }
 
 	document.getElementById('txtNiceHashUrl').value = settingsModel.BaseUrl;
 	document.getElementById('txtOrganizationId').value = settingsModel.OrganizationId;
 	document.getElementById('txtApiKey').value = settingsModel.ApiKey;
 	document.getElementById('txtApiSecret').value = settingsModel.ApiSecret;
+	document.getElementById('txtMainCurrency').value = settingsModel.MainCurrency;
+	document.getElementById('txtFreeCurrencyApiKey').value = settingsModel.FreeCurrencyApiKey;
+	document.getElementById('update_interval').value = settingsModel.UpdateInterval;
 
 	websocket.onopen = function () {
 		var json = { event: inRegisterEvent, uuid: inUUID };
@@ -64,6 +75,22 @@ function connectElgatoStreamDeckSocket(inPort, inUUID, inRegisterEvent, inInfo, 
 					settingsModel.ApiSecret = jsonObj.payload.settings.settingsModel.ApiSecret;
 					document.getElementById('txtApiSecret').value = settingsModel.ApiSecret;
 				}
+
+				if (jsonObj.payload.settings.settingsModel.MainCurrency) {
+					settingsModel.MainCurrency = jsonObj.payload.settings.settingsModel.MainCurrency;
+					document.getElementById('txtMainCurrency').value = settingsModel.MainCurrency;
+				}
+
+				if (jsonObj.payload.settings.settingsModel.FreeCurrencyApiKey) {
+					settingsModel.FreeCurrencyApiKey = jsonObj.payload.settings.settingsModel.FreeCurrencyApiKey;
+					document.getElementById('txtFreeCurrencyApiKey').value = settingsModel.FreeCurrencyApiKey;
+				}
+
+				if (jsonObj.payload.settings.settingsModel.UpdateInterval) {
+					settingsModel.UpdateInterval = jsonObj.payload.settings.settingsModel.UpdateInterval;
+					document.getElementById('update_interval').value = settingsModel.UpdateInterval;
+				}
+
 				break;
 			default:
 				break;
