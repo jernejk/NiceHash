@@ -9,6 +9,10 @@ internal class StatsCommand : AsyncCommand
     private readonly IWalletService _walletService;
     private readonly IRigsManagementService _rigsManagementService;
 
+    // TODO: Get this from a service.
+    // TODO: Currency should be configurable.
+    private double _usdToAudExchangeRate = 1.39;
+
     public StatsCommand(IWalletService walletService, IRigsManagementService rigsManagementService)
     {
         _walletService = walletService;
@@ -24,7 +28,29 @@ internal class StatsCommand : AsyncCommand
             .StartAsync("Getting Balance...", async ctx =>
             {
                 var wallet = await _walletService.GetWalletCurrencies();
+                if (wallet == null || wallet.Currencies?.Any() != true)
+                {
+                    AnsiConsole.MarkupLine($"No wallet found");
+                    return;
+                }
+
                 AnsiConsole.MarkupLine($"Balance: [#999]{wallet.Currencies[0].Available}[/] {wallet.Currencies[0].Currency}");
+
+                ctx.Status = "Getting current currency exchange...";
+                var currency = await _walletService.GetCurrencies();
+                if (currency?.TryGetValue(wallet.Currencies[0].Currency + "USDC", out double exchangeRate) == true)
+                {
+                    exchangeRate *= _usdToAudExchangeRate;
+
+                    AnsiConsole.MarkupLine($"Balance: [#999]{Math.Round(wallet.Currencies[0].Available * exchangeRate, 2)}[/] AUD");
+                    AnsiConsole.WriteLine();
+                }
+                else
+                {
+                    AnsiConsole.MarkupLine("Exchange not found");
+                    AnsiConsole.WriteLine();
+                    exchangeRate = 0;
+                }
 
                 ctx.Status = "Getting worker stats...";
                 ctx.Refresh();
@@ -33,7 +59,12 @@ internal class StatsCommand : AsyncCommand
 
                 foreach (var worker in workers.Workers)
                 {
-                    AnsiConsole.MarkupLine($"Worker: {worker.RigName}; Speed: [#999]{worker.SpeedAccepted}[/]; Profitability: [#999]{worker.Profitability}[/]");
+                    AnsiConsole.MarkupLine($"Worker: {worker.RigName}; Speed: [#999]{worker.SpeedAccepted}[/] MH/s; Profitability: [#999]{worker.Profitability}[/]");
+                    if (exchangeRate > 0)
+                    {
+                        AnsiConsole.MarkupLine($"Profitability: [#999]{Math.Round(worker.Profitability * exchangeRate, 2)} AUD[/]");
+                        AnsiConsole.WriteLine();
+                    }
                 }
 
                 ctx.Status = "Getting rigs stats...";

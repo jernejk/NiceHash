@@ -12,6 +12,8 @@ public class StreamDeckNiceHashService
     private readonly IRigsManagementService _rigsManagementService;
     private readonly IWalletService _walletService;
 
+    private int updates = 0;
+
     public StreamDeckNiceHashService()
     {
         var sp = new ServiceCollection()
@@ -35,16 +37,61 @@ public class StreamDeckNiceHashService
 
     public async Task<string> GetCurrentWalletBalance()
     {
+        ++updates;
+
         try
         {
-            var wallet = await _walletService.GetWalletCurrencies();
+            int options = 6;
 
+            var wallet = await _walletService.GetWalletCurrencies();
             if (wallet?.Currencies?.Any() == true)
             {
-                CurrencyInfo highestCurrency = wallet.Currencies.MaxBy(x => x.Available);
-                string result = $"{Math.Round(highestCurrency.Available, 5)}\n{highestCurrency.Currency}";
-
+                string result;
                 MiningRig miner = await GetMinerStatus();
+                CurrencyInfo highestCurrency = wallet.Currencies.MaxBy(x => x.Available);
+                if (updates % options == 0)
+                {
+                    result = $"{Math.Round(highestCurrency.Available, 5)}\n{highestCurrency.Currency}";
+                }
+                else if (updates % options == 1)
+                {
+                    double balanceInAud = highestCurrency.Available * await GetExchangeRate();
+                    result = $"{Math.Round(balanceInAud, 2)}\nAUD";
+                }
+                else if (updates % options == 2)
+                {
+                    IEnumerable<WorkerInfo> workers = await GetWorkers();
+                    double profitInAud = workers.Sum(x => x.Profitability) * await GetExchangeRate();
+                    result = $"{Math.Round(profitInAud, 2)}\nAUD/day";
+                }
+                else if (updates % options == 3)
+                {
+                    double temps = miner.Devices.Max(x => x.Temperature);
+                    double gpuTemps = temps % 65536;
+                    double vramTemps = temps / 65536.0;
+                    result = $"{Math.Round(gpuTemps, 1)}/{Math.Round(vramTemps, 1)}\n°C";
+                }
+                else if (updates % options == 4)
+                {
+                    var speeds = miner.Devices
+                        .Where(x => x.Speeds?.Any() == true)
+                        .SelectMany(x => x.Speeds)
+                        .ToList();
+
+                    double speed = speeds.Sum(x => x.Speed);
+                    string displayUnit = speeds
+                        .MaxBy(x => x.Speed)
+                        ?.DisplaySuffix
+                        ?? "MH";
+                    result = $"{Math.Round(speed, 2)}\n{displayUnit}/s";
+                }
+                else
+                {
+                    double powerUsage = miner.Devices.Sum(x => x.PowerUsage);
+                    result = $"{Math.Round(powerUsage, 1)}\nW";
+                }
+
+                
                 if (miner != null)
                 {
                     result += "\n" + miner.MinerStatus;
@@ -59,7 +106,7 @@ public class StreamDeckNiceHashService
         }
         catch
         {
-            return "Unable to get balance";
+            return "Error";
         }
     }
 
@@ -75,6 +122,32 @@ public class StreamDeckNiceHashService
         catch
         {
             return null;
+        }
+    }
+
+    public async Task<IEnumerable<WorkerInfo>> GetWorkers()
+    {
+        try
+        {
+            var workers = await _rigsManagementService.GetActiveWorkers();
+            return workers?.Workers;
+        }
+        catch
+        {
+            return null;
+        }
+    }
+
+    public async Task<double> GetExchangeRate()
+    {
+        Dictionary<string, double> currency = await _walletService.GetCurrencies();
+        if (currency?.TryGetValue("BTCUSDC", out double exchangeRate) == true)
+        {
+            return exchangeRate *= 1.39;
+        }
+        else
+        {
+            return 1;
         }
     }
 

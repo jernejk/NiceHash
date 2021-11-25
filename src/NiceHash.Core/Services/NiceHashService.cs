@@ -22,7 +22,7 @@ internal class NiceHashService : INiceHashService
     private readonly IHttpClientFactory _httpClientFactory;
     private readonly IConfigProvider _configProvider;
     private readonly IMemoryCache _memoryCache;
-    private string _lastKnownServerTime;
+    private string? _lastKnownServerTime = null;
 
     public NiceHashService(IHttpClientFactory httpClientFactory, IConfigProvider configProvider, IMemoryCache memoryCache)
     {

@@ -31,8 +31,17 @@ public class MiningDevice
     public double RevolutionsPerMinute { get; set; }
     public double RevolutionsPerMinutePercentage { get; set; }
     public double PowerUsage { get; set; }
+    public List<DeviceSpeed> Speeds { get; set; }
     //"intensity": {
     //  "enumName": "LOW",
     //  "description": "Low power mode"
     //},
+}
+
+public class DeviceSpeed
+{
+    public string Algorithm { get; set; }
+    public string Title { get; set; }
+    public double Speed { get; set; }
+    public string DisplaySuffix { get; set; }
 }
