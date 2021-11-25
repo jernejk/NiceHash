@@ -10,7 +10,10 @@ public class StreamDeckNiceHashService
 {
     private readonly InMemoryConfigProvider _configProvider = new();
     private readonly IRigsManagementService _rigsManagementService;
+    private readonly ICurrencyExchangeService _currencyExchangeService;
     private readonly IWalletService _walletService;
+
+    private string _currentStatus = "waiting";
 
     private int updates = 0;
 
@@ -22,6 +25,7 @@ public class StreamDeckNiceHashService
             .BuildServiceProvider();
 
         _rigsManagementService = sp.GetService<IRigsManagementService>();
+        _currencyExchangeService = sp.GetService<ICurrencyExchangeService>();
         _walletService = sp.GetService<IWalletService>();
     }
 
@@ -51,18 +55,18 @@ public class StreamDeckNiceHashService
                 CurrencyInfo highestCurrency = wallet.Currencies.MaxBy(x => x.Available);
                 if (updates % options == 0)
                 {
-                    result = $"{Math.Round(highestCurrency.Available, 5)}\n{highestCurrency.Currency}";
+                    result = $"{(decimal)Math.Round(highestCurrency.Available, 5)}\n{highestCurrency.Currency}";
                 }
                 else if (updates % options == 1)
                 {
-                    double balanceInAud = highestCurrency.Available * await GetExchangeRate();
-                    result = $"{Math.Round(balanceInAud, 2)}\nAUD";
+                    double balanceInAud = highestCurrency.Available * await GetExchangeRate(highestCurrency.Currency);
+                    result = $"{Math.Round(balanceInAud, 2)}\n{_currencyExchangeService.GetMainCurrency()}";
                 }
                 else if (updates % options == 2)
                 {
                     IEnumerable<WorkerInfo> workers = await GetWorkers();
-                    double profitInAud = workers.Sum(x => x.Profitability) * await GetExchangeRate();
-                    result = $"{Math.Round(profitInAud, 2)}\nAUD/day";
+                    double profitInAud = workers.Sum(x => x.Profitability) * await GetExchangeRate(highestCurrency.Currency);
+                    result = $"{Math.Round(profitInAud, 2)}\n{_currencyExchangeService.GetMainCurrency()}/day";
                 }
                 else if (updates % options == 3)
                 {
@@ -94,21 +98,33 @@ public class StreamDeckNiceHashService
                 
                 if (miner != null)
                 {
-                    result += "\n" + miner.MinerStatus;
+                    _currentStatus = miner.MinerStatus?.ToLowerInvariant() switch
+                    {
+                        "mining" => "mining",
+                        "benchmarking" => "minig",
+                        "inactive" => "sleeping",
+                        "stopped" => "sleeping",
+                        "pending" => "sleeping",
+                        _ => "unavailable"
+                    };
                 }
 
                 return result;
             }
             else
             {
+                _currentStatus = "unavailable";
                 return "No wallet balance found";
             }
         }
         catch
         {
+            _currentStatus = "unavailable";
             return "Error";
         }
     }
+
+    public string GetStatus() => _currentStatus;
 
     public async Task<MiningRig> GetMinerStatus()
     {
@@ -138,12 +154,13 @@ public class StreamDeckNiceHashService
         }
     }
 
-    public async Task<double> GetExchangeRate()
+    public async Task<double> GetExchangeRate(string cryptoCurrency)
     {
         Dictionary<string, double> currency = await _walletService.GetCurrencies();
-        if (currency?.TryGetValue("BTCUSDC", out double exchangeRate) == true)
+        if (currency?.TryGetValue($"{cryptoCurrency}USDC", out double usdExchangeRate) == true || currency?.TryGetValue($"{cryptoCurrency}USDT", out usdExchangeRate) == true)
         {
-            return exchangeRate *= 1.39;
+            double exchangeRate = await _currencyExchangeService.GetExchangeRateInMainCurrency();
+            return usdExchangeRate *= exchangeRate;
         }
         else
         {

@@ -9,6 +9,7 @@ public interface ICurrencyExchangeService
     Task<double> GetExchangeRate(string currency, CancellationToken ct = default);
     Task<double> GetExchangeRateInMainCurrency(CancellationToken ct = default);
     Task<Dictionary<string, double>?> GetExchangeRates(CancellationToken ct = default);
+    string? GetMainCurrency();
 }
 
 internal class CurrencyExchangeService : ICurrencyExchangeService
@@ -31,11 +32,9 @@ internal class CurrencyExchangeService : ICurrencyExchangeService
             try
             {
                 var config = _configProvider.GetConfig();
-                if (string.IsNullOrWhiteSpace(config.FreeCurrencyApiKey))
-                {
-                    e.SetSlidingExpiration(TimeSpan.FromSeconds(0));
-                    return null;
-                }
+                string apiKey = !string.IsNullOrWhiteSpace(config.ApiKey)
+                    ? config.ApiKey
+                    : string.Empty;
 
                 HttpClient? httpClient = _httpClientFactory.CreateClient();
                 var response = await httpClient.GetFromJsonAsync<FreeCurrencyExchangeRateResponse>($"https://freecurrencyapi.net/api/v2/latest?apikey={config.FreeCurrencyApiKey}", ct);
@@ -72,10 +71,18 @@ internal class CurrencyExchangeService : ICurrencyExchangeService
         }
 
         var exchangeRates = await GetExchangeRates(ct);
+        currency = currency.ToUpperInvariant();
 
         // If currency is not matched, return 1.
         return exchangeRates?.TryGetValue(currency, out var rate) == true
             ? rate
             : 1;
+    }
+
+    public string? GetMainCurrency()
+    {
+        var config = _configProvider.GetConfig();
+        return config?.MainCurrency?.ToUpperInvariant()
+            ?? "USD";
     }
 }

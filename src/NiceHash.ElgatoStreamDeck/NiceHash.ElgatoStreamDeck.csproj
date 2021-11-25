@@ -18,6 +18,13 @@
 	<Target Name="PostBuild" AfterTargets="PostBuildEvent" Condition=" '$(Configuration)'=='Debug'">
 		<Exec Command="powershell -ExecutionPolicy Unrestricted -file &quot;$(ProjectDir)RegisterPluginAndStartStreamDeck.ps1&quot;" />
 	</Target>
+  
+  <ItemGroup>
+    <Compile Remove="images\category\**" />
+    <EmbeddedResource Remove="images\category\**" />
+    <None Remove="images\category\**" />
+    <Compile Remove="images\*.pdn" />
+  </ItemGroup>
 
 	<!--Dependencies-->
 	<ItemGroup>
@@ -37,6 +44,12 @@
 
 	<!--Deployment files that must go with the build executable -->
 	<ItemGroup>
+    <Content Include="images\*.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="images\category\*.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
 		<Content Include="manifest.json">
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</Content>

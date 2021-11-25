@@ -12,16 +12,15 @@ public abstract class BaseNiceHashAction : BaseElgateStreamDeckAction<NiceSettin
 
     public override TimeSpan GetUpdateInterval() => TimeSpan.FromSeconds(SettingsModel.UpdateInterval);
 
-    public async override Task OnDidReceiveSettings(StreamDeckEventPayload args)
+    public async override Task OnUpdateConfig(StreamDeckEventPayload args)
     {
         _niceHashService.UpdateSettings(SettingsModel);
 
-        await base.OnDidReceiveSettings(args);
+        await base.OnUpdateConfig(args);
     }
 
     public override bool IsSettingsValid()
     {
-        _niceHashService.UpdateSettings(SettingsModel);
         return NiceHashService.IsSettingsValid();
     }
 

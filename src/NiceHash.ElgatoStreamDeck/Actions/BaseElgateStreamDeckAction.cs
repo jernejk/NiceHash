@@ -13,6 +13,8 @@ public abstract class BaseElgateStreamDeckAction<T> : BaseStreamDeckActionWithSe
 
     public override async Task OnDidReceiveSettings(StreamDeckEventPayload args)
     {
+        await OnUpdateConfig(args);
+
         TimeSpan updateInterval = GetUpdateInterval();
         if (_updateStatusEverySecond != updateInterval)
         {
@@ -47,6 +49,8 @@ public abstract class BaseElgateStreamDeckAction<T> : BaseStreamDeckActionWithSe
     {
         try
         {
+            await OnUpdateConfig(args);
+
             DateTime now = DateTime.Now;
             TimeSpan delta = now.Subtract(_pressDownDateTime);
 
@@ -74,6 +78,8 @@ public abstract class BaseElgateStreamDeckAction<T> : BaseStreamDeckActionWithSe
 
         try
         {
+            await OnUpdateConfig(args);
+
             if (IsSettingsValid())
             {
                 await UpdateDisplay(args);
@@ -94,6 +100,8 @@ public abstract class BaseElgateStreamDeckAction<T> : BaseStreamDeckActionWithSe
     {
         try
         {
+            await OnUpdateConfig(args);
+
             if (_backgroundTaskToken != null)
             {
                 _backgroundTaskToken.Cancel();
@@ -112,6 +120,7 @@ public abstract class BaseElgateStreamDeckAction<T> : BaseStreamDeckActionWithSe
     public abstract Task OnError(StreamDeckEventPayload args, Exception ex);
     public abstract bool IsSettingsValid();
     public abstract TimeSpan GetUpdateInterval();
+    public virtual Task OnUpdateConfig(StreamDeckEventPayload args) => Task.CompletedTask;
 
     public virtual Task MissingSettings(StreamDeckEventPayload args)
     {

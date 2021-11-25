@@ -19,13 +19,16 @@ internal class InMemoryConfigProvider : IConfigProvider
         Config.ApiSecret = settingsModel.ApiSecret;
         Config.ApiKey = settingsModel.ApiKey;
 
+        Config.MainCurrency = settingsModel.MainCurrency;
+        Config.FreeCurrencyApiKey = settingsModel.FreeCurrencyApiKey;
+
         if (Uri.TryCreate(settingsModel.BaseUrl, UriKind.Absolute, out Uri niceHashApiUrl))
         {
             Config.BaseUri = niceHashApiUrl;
         }
         else
         {
-            Config.BaseUri = null;
+            Config.BaseUri = new Uri("https://api2.nicehash.com");
         }
     }
 }
