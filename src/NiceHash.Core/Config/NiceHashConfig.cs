@@ -16,4 +16,7 @@ public class NiceHashConfig
     public string OrganizationId { get; set; }
     public string ApiKey { get; set; }
     public string ApiSecret { get; set; }
+
+    public string FreeCurrencyApiKey { get; set; }
+    public string MainCurrency { get; set; }
 }

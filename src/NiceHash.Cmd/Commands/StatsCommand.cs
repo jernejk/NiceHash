@@ -8,15 +8,13 @@ internal class StatsCommand : AsyncCommand
 {
     private readonly IWalletService _walletService;
     private readonly IRigsManagementService _rigsManagementService;
+    private readonly ICurrencyExchangeService _currencyExchangeService;
 
-    // TODO: Get this from a service.
-    // TODO: Currency should be configurable.
-    private double _usdToAudExchangeRate = 1.39;
-
-    public StatsCommand(IWalletService walletService, IRigsManagementService rigsManagementService)
+    public StatsCommand(IWalletService walletService, IRigsManagementService rigsManagementService, ICurrencyExchangeService currencyExchangeService)
     {
         _walletService = walletService;
         _rigsManagementService = rigsManagementService;
+        _currencyExchangeService = currencyExchangeService;
     }
 
     public override async Task<int> ExecuteAsync(CommandContext context)
@@ -36,11 +34,13 @@ internal class StatsCommand : AsyncCommand
 
                 AnsiConsole.MarkupLine($"Balance: [#999]{wallet.Currencies[0].Available}[/] {wallet.Currencies[0].Currency}");
 
+                double usdToMainCurrencyExchangeRate = await _currencyExchangeService.GetExchangeRateInMainCurrency();
+
                 ctx.Status = "Getting current currency exchange...";
                 var currency = await _walletService.GetCurrencies();
                 if (currency?.TryGetValue(wallet.Currencies[0].Currency + "USDC", out double exchangeRate) == true)
                 {
-                    exchangeRate *= _usdToAudExchangeRate;
+                    exchangeRate *= usdToMainCurrencyExchangeRate;
 
                     AnsiConsole.MarkupLine($"Balance: [#999]{Math.Round(wallet.Currencies[0].Available * exchangeRate, 2)}[/] AUD");
                     AnsiConsole.WriteLine();

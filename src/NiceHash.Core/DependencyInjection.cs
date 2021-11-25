@@ -15,7 +15,9 @@ namespace NiceHash.Core
                 BaseUri = new Uri(configuration["NiceHashApi:BaseUri"]),
                 OrganizationId = configuration["NiceHashApi:OrganizationId"],
                 ApiKey = configuration["NiceHashApi:ApiKey"],
-                ApiSecret = configuration["NiceHashApi:ApiSecret"]
+                ApiSecret = configuration["NiceHashApi:ApiSecret"],
+                FreeCurrencyApiKey = configuration["NiceHashApi:FreeCurrencyApiKey"],
+                MainCurrency = configuration["NiceHashApi:MainCurrency"]
             };
 
             return serviceCollection.AddNiceHash(apiConfig);
@@ -43,6 +45,7 @@ namespace NiceHash.Core
                 .AddTransient<INiceHashService, NiceHashService>()
                 .AddTransient<IRigsManagementService, RigsManagementService>()
                 .AddTransient<IWalletService, WalletService>()
+                .AddTransient<ICurrencyExchangeService, CurrencyExchangeService>()
                 .AddHttpClient()
                 .AddMemoryCache();
     }
