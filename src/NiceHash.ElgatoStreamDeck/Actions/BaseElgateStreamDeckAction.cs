@@ -30,6 +30,12 @@ public abstract class BaseElgateStreamDeckAction<T> : BaseStreamDeckActionWithSe
         await base.OnDidReceiveSettings(args);
     }
 
+    public virtual void ResetBackgroundTaskTimer(StreamDeckEventPayload args)
+    {
+        StopBackgroundTask();
+        StartBackgroundTask(args);
+    }
+
     public override Task OnKeyDown(StreamDeckEventPayload args)
     {
         _pressDownDateTime = DateTime.Now;
@@ -75,7 +81,7 @@ public abstract class BaseElgateStreamDeckAction<T> : BaseStreamDeckActionWithSe
 
             if (GetUpdateInterval().TotalMilliseconds > 0)
             {
-                StartBackgroundTask(args);
+                ResetBackgroundTaskTimer(args);
             }
         }
         catch (Exception ex)

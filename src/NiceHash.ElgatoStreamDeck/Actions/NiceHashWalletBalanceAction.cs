@@ -21,6 +21,8 @@ public class NiceHashWalletBalanceAction : BaseNiceHashAction
 
     private async Task UpdateWalletBalance(StreamDeckEventPayload args)
     {
+        ResetBackgroundTaskTimer(args);
+
         string balance = await NiceHashService.GetCurrentWalletBalance();
         await Manager.SetTitleAsync(args.context, balance);
     }
